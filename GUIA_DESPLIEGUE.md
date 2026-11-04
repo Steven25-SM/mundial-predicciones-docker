@@ -37,11 +37,11 @@ Navegador → localhost:8080 → Nginx (balanceador least_conn)
 
    Reinicia Windows si se solicita. Consulta las instrucciones oficiales de Docker Desktop: https://docs.docker.com/desktop/setup/install/windows-install/
 2. Instala y abre **Docker Desktop**: https://www.docker.com/products/docker-desktop/ . Espera hasta ver que el motor esté funcionando y usa **contenedores Linux**.
-3. Descarga el repositorio (sustituye `TU_USUARIO` por el usuario dueño del repositorio):
+3. Descarga el repositorio:
 
    ```powershell
-   git clone https://github.com/TU_USUARIO/mundial-predicciones-docker.git
-   cd mundial-predicciones-docker
+   git clone https://github.com/Steven25-SM/mundial-predicciones-docker.git
+
    ```
 
    Si descargaste un ZIP, descomprímelo y abre PowerShell en la carpeta donde está `compose.yaml`.
@@ -51,8 +51,7 @@ Navegador → localhost:8080 → Nginx (balanceador least_conn)
 Instala Docker Engine y el plugin Compose usando las instrucciones oficiales para tu distribución: https://docs.docker.com/engine/install/ . Después:
 
 ```bash
-git clone https://github.com/TU_USUARIO/mundial-predicciones-docker.git
-cd mundial-predicciones-docker
+git clone https://github.com/Steven25-SM/mundial-predicciones-docker.git
 cp .env.example .env
 ```
 
