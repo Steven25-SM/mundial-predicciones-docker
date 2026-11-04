@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Partidos | MundialLab12{% endblock %}
+{% block page_hero %}
+<section class="hero hero-main">
+  <div class="hero-copy">
+    <div class="hero-eyebrow"><span></span> QUINIELA EDUCATIVA · TEMPORADA DEMO</div>
+    <h1>La emoción del fútbol.<br><span>Tu marcador, tus puntos.</span></h1>
+    <p>Pronostica los resultados, compite con tus amigos y asciende en el ranking. Cada acierto cuenta.</p>
+    <div class="hero-actions"><a class="btn btn-hero" href="/salas">Crear o unirme a una sala <span aria-hidden="true">↗</span></a><a class="btn btn-hero-outline" href="/ranking">Ver clasificación</a></div>
+  </div>
+  <div class="hero-art" aria-hidden="true"><div class="hero-orbit orbit-outer"></div><div class="hero-orbit orbit-inner"></div><div class="pitch"><div class="pitch-mid"></div><div class="pitch-circle"></div><div class="pitch-left"></div><div class="pitch-right"></div></div><div class="hero-art-dot dot-one"></div><div class="hero-art-dot dot-two"></div></div>
+</section>
+{% endblock %}
+{% block content %}
+<div class="section-head section-head-first"><div><div class="eyebrow">SISTEMA DE PUNTUACIÓN</div><h2>Cada acierto suma</h2><p>Así se calculan los puntos de tus predicciones.</p></div></div>
+<section class="rules" aria-label="Reglas de puntuación">
+  <div class="rule-card rule-purple"><span class="rule-symbol">◎</span><span class="rule-label">Marcador exacto</span><strong>5 <small>pts</small></strong><span class="rule-foot">Resultado idéntico</span></div>
+  <div class="rule-card rule-teal"><span class="rule-symbol">✓</span><span class="rule-label">Ganador correcto</span><strong>3 <small>pts</small></strong><span class="rule-foot">También empate</span></div>
+  <div class="rule-card rule-pink"><span class="rule-symbol">±</span><span class="rule-label">Diferencia de goles</span><strong>2 <small>pts</small></strong><span class="rule-foot">Margen acertado</span></div>
+  <div class="rule-card rule-orange"><span class="rule-symbol">↗</span><span class="rule-label">Racha de 3</span><strong>+2 <small>pts</small></strong><span class="rule-foot">Aciertos consecutivos</span></div>
+  <div class="rule-card rule-blue"><span class="rule-symbol">◷</span><span class="rule-label">Anticipación</span><strong>+1 <small>pt</small></strong><span class="rule-foot">Más de 24 horas</span></div>
+</section>
+<div class="section-head"><div><div class="eyebrow">CALENDARIO DE PARTIDOS</div><h2>Partidos de la simulación</h2><p>Guarda tus pronósticos antes de que comiencen.</p></div><div class="pill">{{ matches|length }} partidos</div></div>
+{% if matches %}
+<div class="match-grid">
+{% for match in matches %}
+<article class="match-card">
+  <div class="match-top"><span class="league"><span class="league-dot"></span> MUNDIAL · DEMO</span>{% if match.home_score is not none %}<span class="chip completed">FINALIZADO</span>{% elif match.kickoff <= now %}<span class="chip closed">CERRADO</span>{% else %}<span class="chip upcoming">ABIERTO</span>{% endif %}</div>
+  <div class="teams"><div class="team"><span class="team-crest">L</span><b>{{match.home_team}}</b></div><div class="score-box">{% if match.home_score is not none %}{{match.home_score}} : {{match.away_score}}{% else %}VS{% endif %}</div><div class="team"><span class="team-crest away-crest">V</span><b>{{match.away_team}}</b></div></div>
+  <div class="match-date"><span aria-hidden="true">◷</span> Inicio (UTC): {{match.kickoff.strftime('%d/%m/%Y %H:%M')}}</div>
+  {% if user %}
+    {% if match.home_score is not none %}
+      <div class="prediction-note">{% if match.id in predictions %}Tu pronóstico: <b>{{predictions[match.id].home_goals}}–{{predictions[match.id].away_goals}}</b> &nbsp;•&nbsp; <strong>{{breakdown[match.id].total if match.id in breakdown else 0}} puntos</strong>{% else %}No registraste pronóstico{% endif %}</div>
+    {% elif match.kickoff <= now %}
+      <div class="prediction-note">Pronósticos bloqueados: partido iniciado.</div>
+    {% else %}
+      <form class="predict-form" action="/pronosticar/{{match.id}}" method="post"><input type="hidden" name="csrf" value="{{csrf}}"><label>Tu marcador</label><div class="predict-inputs"><input aria-label="Goles local" name="home_goals" type="number" min="0" max="30" required value="{{predictions[match.id].home_goals if match.id in predictions else 0}}"><span>–</span><input aria-label="Goles visitante" name="away_goals" type="number" min="0" max="30" required value="{{predictions[match.id].away_goals if match.id in predictions else 0}}"><button class="btn btn-primary btn-sm" type="submit">{{'Actualizar' if match.id in predictions else 'Guardar'}}</button></div></form>
+    {% endif %}
+  {% else %}<a class="btn btn-outline btn-block" href="/ingresar">Inicia sesión para pronosticar</a>{% endif %}
+</article>
+{% endfor %}
+</div>
+{% else %}
+<div class="empty"><div class="empty-icon">◷</div><h3>No hay partidos todavía</h3><p>Ingresa como administrador, crea partidos de prueba y comparte el sitio con tus participantes.</p></div>
+{% endif %}
+<section class="info-line"><span class="info-line-icon">i</span><div><h3>¿Cómo funcionan los puntos?</h3><p>El resultado exacto vale 5 puntos base. Si no es exacto, acertar el ganador o empate aporta 3 puntos y acertar también el margen de victoria aporta otros 2. Cada tercer ganador acertado consecutivamente suma 2 puntos. Un pronóstico registrado con <b>más de 24 horas</b> de anticipación obtiene 1 punto adicional. Los pronósticos cierran al inicio del partido.</p></div></section>
+{% endblock %}

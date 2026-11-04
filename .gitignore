@@ -1,0 +1,41 @@
+# Credenciales y configuraciones locales (conservar .env.example)
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+*.egg-info/
+
+# Bases de datos locales y respaldos
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-shm
+*.db-wal
+*.dump
+*.sql.gz
+postgres_data/
+
+# Archivos de editor y sistema
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Pruebas de estrés: conservar carpeta pero no datos locales
+/evidencias/*
+!/evidencias/.gitkeep
+
+# Grabaciones, capturas y exportaciones locales
+*.mp4
+*.avi
+*.mkv
+*.mov
+*.log

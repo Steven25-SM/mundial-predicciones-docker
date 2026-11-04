@@ -1,0 +1,31 @@
+digraph score {
+ graph [label="LABORATORIO 12  |  Flujo de puntuación",labelloc=t,fontname="DejaVu Sans",fontsize=21,bgcolor=white,pad=0.3, ranksep=0.35,nodesep=0.4];
+ node [shape=box,style="rounded,filled",fillcolor="#eaf1fa",color="#6382a0",fontname="DejaVu Sans",fontsize=11,margin="0.18,0.12"];
+ edge [fontname="DejaVu Sans",fontsize=10,color="#60798e"];
+ a [label="Administrador publica marcador"];
+ b [label="Obtener pronósticos por participante"];
+ c [label="Ordenar partidos finalizados por fecha"];
+ d [label="Marcador exacto?",shape=diamond,fillcolor="#fff1d7"];
+ e [label="Base = 5"];
+ f [label="Ganador/empate correcto?",shape=diamond,fillcolor="#fff1d7"];
+ g [label="Base = 3"];
+ h [label="Base = 0\nRomper racha"];
+ i [label="Diferencia correcta y victoria?",shape=diamond,fillcolor="#fff1d7"];
+ j [label="Extra margen = +2"];
+ k [label="Por cada 3 aciertos seguidos: +2"];
+ l [label="Registró más de 24h antes: +1"];
+ m [label="Sumar puntos y actualizar ranking\n(cálculo al consultar, sin duplicados)",fillcolor="#e0f9eb",color="#6ca77f"];
+ a->b->c->d;
+ d->e [label="Sí"];
+ d->f [label="No"];
+ f->g [label="Sí"];
+ f->h [label="No"];
+ g->i;
+ i->j [label="Sí"];
+ i->k [label="No"];
+ j->k;
+ e->k;
+ h->l;
+ k->l;
+ l->m;
+ }

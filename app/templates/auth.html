@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}{{'Registrarse' if mode == 'registro' else 'Iniciar sesión'}} | MundialLab12{% endblock %}
+{% block content %}
+<div class="auth-wrap"><div class="card auth-card"><div class="auth-topline"></div><div class="auth-badge">MUNDIAL<span>LAB</span> 12</div><div class="eyebrow">TU CUENTA DE TORNEO</div><h1>{{'Crear una cuenta' if mode == 'registro' else 'Bienvenido de vuelta'}}</h1><p>{{'Regístrate para pronosticar y unirte a grupos.' if mode == 'registro' else 'Ingresa para continuar compitiendo.'}}</p>
+<form action="/{{mode}}" method="post"><input type="hidden" name="csrf" value="{{csrf}}">
+{% if mode == 'registro' %}<label for="name">Nombre visible</label><input id="name" type="text" name="name" minlength="2" maxlength="80" required placeholder="Nombre del participante">{% endif %}
+<label for="email">Correo electrónico</label><input id="email" type="email" name="email" required placeholder="correo@ejemplo.com">
+<label for="password">Contraseña</label><input id="password" type="password" name="password" minlength="8" required placeholder="Mínimo 8 caracteres">
+<button type="submit" class="btn btn-primary btn-block">{{'Crear cuenta' if mode == 'registro' else 'Ingresar'}} <span aria-hidden="true">↗</span></button></form>
+<div class="auth-switch">{% if mode == 'registro' %}¿Ya tienes cuenta? <a href="/ingresar">Ingresa aquí</a>{% else %}¿Aún no tienes cuenta? <a href="/registro">Regístrate aquí</a>{% endif %}</div></div></div>
+{% endblock %}

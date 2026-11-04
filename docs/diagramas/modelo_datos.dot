@@ -1,0 +1,15 @@
+digraph er {
+  graph [label="LABORATORIO 12  |  Modelo lógico relacional",labelloc=t,fontname="DejaVu Sans",fontsize=21,bgcolor=white,pad=0.4, ranksep=0.9,nodesep=0.5, splines=ortho];
+  node [shape=record,style="filled",fillcolor="#f0f5fa",color="#527fa6",fontname="DejaVu Sans",fontsize=11,margin="0.17,0.12",penwidth=1.4];
+  edge [color="#406482",fontsize=10,arrowhead=vee,arrowsize=0.7];
+  users [label="{users|PK id: int\lname: varchar(80)\lemail: varchar(190) UNIQUE\lpassword_hash: varchar(255)\lis_admin: bool\l}"];
+  matches [label="{matches|PK id: int\lhome_team: varchar(80)\laway_team: varchar(80)\lkickoff: datetime UTC\lhome_score: int?\laway_score: int?\l}"];
+  predictions [label="{predictions|PK id: int\lFK user_id: int\lFK match_id: int\lhome_goals: int\laway_goals: int\lcreated_at: datetime UTC\lUNIQUE(user_id, match_id)\l}", fillcolor="#fff0db",color="#cc8a42"];
+  rooms [label="{rooms|PK id: int\lname: varchar(80)\linvite_code: varchar(16) UNIQUE\lFK owner_id: int\l}"];
+  memberships [label="{memberships|PK id: int\lFK room_id: int\lFK user_id: int\lUNIQUE(room_id, user_id)\l}",fillcolor="#e7f8ea",color="#61a475"];
+  users -> predictions [label="1:N",headlabel=" "];
+  matches -> predictions [label="1:N"];
+  users -> rooms [label="1:N"];
+  rooms -> memberships [label="1:N"];
+  users -> memberships [label="1:N"];
+}

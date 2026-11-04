@@ -1,0 +1,72 @@
+name: mundial-lab12
+x-web-common: &web-common
+  build: ./app
+  restart: unless-stopped
+  env_file:
+    - .env
+  environment:
+    DATABASE_URL: postgresql+psycopg://mundial:${DB_PASSWORD}@db:5432/mundial
+    SESSION_SECRET: ${SESSION_SECRET}
+    ADMIN_EMAIL: ${ADMIN_EMAIL}
+    ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+  depends_on:
+    init:
+      condition: service_completed_successfully
+  healthcheck:
+    test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8000/health',timeout=3)"]
+    interval: 10s
+    timeout: 5s
+    retries: 8
+
+services:
+  init:
+    build: ./app
+    restart: "no"
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://mundial:${DB_PASSWORD}@db:5432/mundial
+      SESSION_SECRET: ${SESSION_SECRET}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    command: ["python", "-c", "from main import init_database; init_database()"]
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: mundial
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: mundial
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mundial -d mundial"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+
+  app1:
+    <<: *web-common
+
+  app2:
+    <<: *web-common
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    depends_on:
+      app1:
+        condition: service_healthy
+      app2:
+        condition: service_healthy
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+
+volumes:
+  postgres_data:

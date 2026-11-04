@@ -1,0 +1,16 @@
+digraph arquitectura {
+  graph [label="LABORATORIO 12  |  Arquitectura local contenerizada", labelloc=t, fontsize=22, fontname="DejaVu Sans", bgcolor="#ffffff", pad=0.3, ranksep=0.65, nodesep=0.65, splines=polyline];
+  node [shape=box, style="rounded,filled", fillcolor="#f5f8fc", color="#6583a6", penwidth=1.7, fontname="DejaVu Sans", fontsize=12, margin="0.25,0.16"];
+  edge [color="#6381a0", fontname="DejaVu Sans", fontsize=10, arrowsize=0.8, penwidth=1.8];
+  cliente [label="NAVEGADOR WEB\nUsuarios / Administrador", fillcolor="#d7e9ff"];
+  nginx [label="NGINX  •  Puerto 8080\nReverse Proxy + Balanceo least_conn", fillcolor="#ffe4c7", color="#dc8632"];
+  app1 [label="APP 1  •  FastAPI\nAutenticación · Partidos · Salas\nPronósticos · Puntuación", fillcolor="#ddf6e6", color="#50a478"];
+  app2 [label="APP 2  •  FastAPI\nAutenticación · Partidos · Salas\nPronósticos · Puntuación", fillcolor="#ddf6e6", color="#50a478"];
+  db [label="POSTGRESQL 17\nBase de datos compartida\nVolumen persistente postgres_data", fillcolor="#dfe9ff", color="#5279c1"];
+  cliente -> nginx [label="HTTP :8080"];
+  nginx -> app1 [label="HTTP interno :8000"];
+  nginx -> app2 [label="HTTP interno :8000"];
+  {rank=same; app1; app2}
+  app1 -> db [label="SQLAlchemy / psycopg"];
+  app2 -> db [label="SQLAlchemy / psycopg"];
+}

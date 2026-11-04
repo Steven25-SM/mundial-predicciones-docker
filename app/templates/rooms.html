@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Salas | MundialLab12{% endblock %}
+{% block page_hero %}
+<section class="hero page-banner"><div class="page-banner-copy"><div class="hero-eyebrow"><span></span> JUEGA EN GRUPO</div><h1>Mis salas</h1><p>Crea tu propia competencia privada o ingresa con el código que te compartan.</p></div><div class="banner-decoration" aria-hidden="true">◎</div></section>
+{% endblock %}
+{% block content %}
+<div class="section-head section-head-first"><div><div class="eyebrow">COMPETENCIAS PRIVADAS</div><h2>Administrar mis salas</h2></div></div>
+<div class="two-col"><div class="card form-card feature-card feature-purple"><div class="feature-icon">＋</div><div class="eyebrow">NUEVA SALA</div><h2>Crear una sala</h2><form method="post" action="/salas/crear"><input type="hidden" name="csrf" value="{{csrf}}"><label>Nombre de la sala</label><input name="name" required minlength="3" maxlength="80" placeholder="Ej. Grupo de Desarrollo en la Nube"><button class="btn btn-primary" type="submit">Crear sala <span aria-hidden="true">↗</span></button></form></div>
+<div class="card form-card feature-card feature-green"><div class="feature-icon">↗</div><div class="eyebrow">YA TIENES INVITACIÓN</div><h2>Unirme a una sala</h2><form method="post" action="/salas/unirse"><input type="hidden" name="csrf" value="{{csrf}}"><label>Código de invitación</label><input name="invite_code" required minlength="8" maxlength="16" placeholder="Ej. 9A7C3E2F"><button class="btn btn-secondary" type="submit">Ingresar con código <span aria-hidden="true">↗</span></button></form></div></div>
+<div class="section-head"><div><div class="eyebrow">TUS GRUPOS</div><h2>Salas en las que participas</h2></div><div class="pill">{{mine|length}} salas</div></div>
+{% if mine %}<div class="rooms-grid">{% for room in mine %}<a class="room-item" href="/salas/{{room.id}}"><div class="room-icon">◎</div><div><b>{{room.name}}</b><small>Código: {{room.invite_code}}</small></div><span aria-hidden="true">↗</span></a>{% endfor %}</div>{% else %}<div class="empty"><div class="empty-icon">◎</div><h3>Aún no perteneces a una sala</h3><p>Crea una sala o pide a alguien su código de invitación.</p></div>{% endif %}
+{% endblock %}
